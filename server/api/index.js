@@ -1,7 +1,7 @@
 const express = require('express');
 const apiRouter = express.Router();
 
-//Testing functionality of endpoint
+//Testing functionality of router
 apiRouter.get('/', (req, res, next)=> {
     res.send("This is the apiRouter")
 });

@@ -1,9 +1,17 @@
 const express = require('express');
 const postsRouter = express.Router();
 
-//test functionality of endpoint
-postsRouter.get('/', (req, res, send) => {
-    res.send("POSTS ROUTER!!")
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+//GET /api/posts - get all posts
+postsRouter.get('/', async (req, res, next) => {
+    try {
+        const posts = await prisma.posts.findMany();
+        res.send(posts)
+    } catch (error) {
+        res.send("unable to get posts")
+    }
 });
 
 
