@@ -1,33 +1,33 @@
 const express = require('express');
 const authRouter = express.Router();
 
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const bcrypt = require('bcrypt');
 const SALT_COUNT = 10;
 
 const jwt = require("jsonwebtoken");
-const {JWT} = process.env
+const { JWT } = process.env
 
 
 //test functionality of router
-authRouter.get('/', (req, res, next)=> {
+authRouter.get('/', (req, res, next) => {
     res.send("Auth Router!");
 });
 
 //GET /auth/users - get all users
-authRouter.get('/users', async(req, res, next) => {
-    try{
+authRouter.get('/users', async (req, res, next) => {
+    try {
         const users = await prisma.users.findMany();
         res.send(users)
-    } catch(error) {
+    } catch (error) {
         res.send("unable to get all users")
     }
 });
 
 //POST /auth/register - post new user
-authRouter.post('/register', async(req, res, next) => {
+authRouter.post('/register', async (req, res, next) => {
     const password = req.body.password;
     const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
 
@@ -38,7 +38,7 @@ authRouter.post('/register', async(req, res, next) => {
             }
         })
 
-        if(user) {
+        if (user) {
             res.send("A user by that username already exists")
         }
 
@@ -49,11 +49,11 @@ authRouter.post('/register', async(req, res, next) => {
             }
         });
 
-        const token = jwt.sign({id: newUser.id}, process.env.JWT);
+        const token = jwt.sign({ id: newUser.id }, process.env.JWT);
         const responseMessage = "You have successfully registered! \n Token: " + token
 
         res.send(responseMessage);
-    } catch(error) {
+    } catch (error) {
         res.send("unable to register")
     }
 })
