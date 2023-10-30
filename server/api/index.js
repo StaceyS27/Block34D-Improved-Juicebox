@@ -10,8 +10,7 @@ apiRouter.get('/', (req, res, next)=> {
 const postsRouter = require("./posts");
 apiRouter.use('/posts', postsRouter);
 
-const authRouter = require("./auth");
-apiRouter.use('/auth', authRouter);
+
 
 
 
