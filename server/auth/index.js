@@ -10,12 +10,6 @@ const SALT_COUNT = 10;
 const jwt = require("jsonwebtoken");
 const { JWT } = process.env
 
-
-//test functionality of router
-authRouter.get('/', (req, res, next) => {
-    res.send("Auth Router!");
-});
-
 //GET /auth/users - get all users
 authRouter.get('/users', async (req, res, next) => {
     try {
