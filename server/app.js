@@ -6,6 +6,8 @@ app.get('/', async (req, res, next) => {
     res.send('Hello Express')
 });
 
+app.use(express.json());
+
 const apiRouter = require('./api');
 app.use('/api', apiRouter);
 
