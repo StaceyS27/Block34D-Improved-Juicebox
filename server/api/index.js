@@ -12,6 +12,9 @@ apiRouter.get('/', (req, res, next)=> {
     res.send("This is the apiRouter")
 });
 
+// const postsRouter = require("./posts");
+// apiRouter.use('/posts', postsRouter);
+
 //set "req.user"
 apiRouter.use(async (req, res, next) => {
     const prefix = 'Bearer ';
@@ -33,8 +36,7 @@ apiRouter.use(async (req, res, next) => {
                 })
                 next();
             } else {
-                next({
-                    name: 'AuthorizationHeaderError',
+                res.status(401).json({
                     message: 'Authorization token malformed'
                 })
             }

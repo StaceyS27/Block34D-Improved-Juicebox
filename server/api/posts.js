@@ -13,24 +13,11 @@ postsRouter.get('/', async (req, res, next) => {
         console.log(posts)
         res.send(posts)
     } catch (error) {
-        next()
+        res.send("unable to get posts")
     }
 });
 
-//GET /api/posts/:postId - get single post
-postsRouter.get("/:postId", async(req, res, next) => {
-    try {
-        const singlePost = await prisma.posts.findUnique({
-            where: {
-                id: Number(req.params.postId)
-            }
-        })
-        res.send(singlePost)
-    } catch (error) {
-        res.send("unable to get single post.")
-    }
-})
-
+//POST /api/posts/ - create a new post if authenticated
 postsRouter.post('/', requireUser, async (req, res, next) => {
     try {
         const newPost = await prisma.posts.create({
@@ -49,6 +36,50 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
     }
  })
 
+ //GET /api/posts/:postId - get single post
+postsRouter.get("/:postId", async(req, res, next) => {
+    try {
+        const singlePost = await prisma.posts.findUnique({
+            where: {
+                id: Number(req.params.postId)
+            }
+        })
+
+        if(!singlePost){
+            res.send("post not found")
+        }
+        res.send(singlePost)
+    } catch (error) {
+        res.send("unable to get single post.")
+    }
+});
+
+//PUT /api/posts/:postId - update single post if authenticated
+postsRouter.put("/:postId", requireUser, async(req, res, next) => {
+    try {
+        const updatedPost = await prisma.posts.update({
+            where: {
+                id: Number(req.params.postId),
+                userId: req.user.id
+            },
+            data: {
+                title: req.body.title,
+                content: req.body.content
+            }
+        })
+
+        if(!updatedPost) {
+            res.send("post not found");
+        }
+
+        res.json({
+            message: "Post updated!",
+            post: updatedPost
+        })
+    } catch (error) {
+        res.send("unable to update post.")
+    }
+})
 
 
 
