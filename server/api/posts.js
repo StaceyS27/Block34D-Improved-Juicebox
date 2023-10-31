@@ -4,7 +4,7 @@ const postsRouter = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-//const { requireUser } = require('./utils');
+const { requireUser } = require('./utils');
 
 //GET /api/posts - get all posts
 postsRouter.get('/', async (req, res, next) => {
@@ -31,9 +31,23 @@ postsRouter.get("/:postId", async(req, res, next) => {
     }
 })
 
-// postsRouter.post('/', requireUser, async (req, res, next) => {
-
-// })
+postsRouter.post('/', requireUser, async (req, res, next) => {
+    try {
+        const newPost = await prisma.posts.create({
+            data: {
+                title: req.body.title,
+                content: req.body.content,
+                userId: req.user.id
+            }
+        })
+        res.json({
+            message: "New post created!", 
+            Post: newPost
+        })
+    } catch (error){
+        res.status(401).send("unable to make post.")
+    }
+ })
 
 
 

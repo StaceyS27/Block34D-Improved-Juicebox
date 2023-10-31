@@ -23,7 +23,7 @@ apiRouter.use(async (req, res, next) => {
         const token = auth.slice(prefix.length);
 
         try {
-            const {id} = jwt.verify(token, JWT);
+            const {id} = jwt.verify(token, process.env.JWT);
 
             if (id) {
                 req.user = await prisma.users.findUnique({
@@ -39,7 +39,7 @@ apiRouter.use(async (req, res, next) => {
                 })
             }
         } catch (error) {
-            res.send("Unable to verify ID")
+            res.send(error.message)
         }
     } else {
         next({
