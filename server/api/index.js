@@ -39,7 +39,7 @@ apiRouter.use(async (req, res, next) => {
                 })
             }
         } catch (error) {
-            res.send("Authorization token malformed")
+            res.send("Unable to verify ID")
         }
     } else {
         next({
@@ -53,6 +53,7 @@ apiRouter.use((req, res, next) => {
     if (req.user) {
         console.log("User is set: ", req.user)
     }
+    next()
 });
 
 const postsRouter = require("./posts");
