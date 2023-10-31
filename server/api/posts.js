@@ -90,7 +90,8 @@ postsRouter.delete("/:postId", requireUser, async(req, res, next) => {
     try{
         const deletedPost = await prisma.posts.delete({
             where: {
-                id: Number(req.params.postId)
+                id: Number(req.params.postId),
+                userId: req.user.id
             }
         })
         res.json({
