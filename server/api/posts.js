@@ -81,7 +81,25 @@ postsRouter.put("/:postId", requireUser, async(req, res, next) => {
             post: updatedPost
         })
     } catch (error) {
-        res.send("unable to update post.")
+        res.send("unable to find and update post.")
+    }
+});
+
+//DELETE /api/posts/:postId - delete post by ID
+postsRouter.delete("/:postId", requireUser, async(req, res, next) => {
+    try{
+        const deletedPost = await prisma.posts.delete({
+            where: {
+                id: Number(req.params.postId)
+            }
+        })
+        res.json({
+            message: "Post deleted!",
+            Post: deletedPost
+        })
+
+    } catch(error){
+        res.send("Unable to find and delete post.")
     }
 })
 
