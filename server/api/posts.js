@@ -27,12 +27,16 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
                 userId: req.user.id
             }
         })
+
+        if(!newPost) {
+            res.send("unable to create new post.")
+        }
         res.json({
             message: "New post created!", 
             Post: newPost
         })
     } catch (error){
-        res.status(401).send("unable to make post.")
+        res.status(401).json({error: error.message})
     }
  })
 

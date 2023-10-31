@@ -41,7 +41,7 @@ apiRouter.use(async (req, res, next) => {
                 })
             }
         } catch (error) {
-            res.send(error.message)
+            res.json({error: error.message})
         }
     } else {
         next({
