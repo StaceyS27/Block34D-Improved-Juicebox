@@ -4,8 +4,7 @@ const apiRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const {JWT} = process.env;
 
-const {PrismaClient} = require('@prisma/client')
-const prisma = new PrismaClient();
+const prisma = require('../client');
 
 //Testing functionality of router
 apiRouter.get('/', (req, res, next)=> {
