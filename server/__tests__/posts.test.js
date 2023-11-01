@@ -49,3 +49,25 @@ describe('/api/posts', () => {
         })
     })
 })
+
+describe('/api/posts/:postId', () => {
+    describe('GET /api/posts/:postId', () => {
+        it('returns a single post', async () => {
+            const singlePost = {
+                id: 4,
+                title: "Summer",
+                content: "The summer is my favorite season!",
+                userId: 2
+            };
+
+            prismaMock.posts.findUnique.mockResolvedValue(singlePost);
+
+            const response = await request(app).get(`/api/posts/${singlePost.id}`);
+
+            expect(response.body.id).toEqual(singlePost.id);
+            expect(response.body.title).toEqual(singlePost.title);
+            expect(response.body.content).toEqual(singlePost.content);
+            expect(response.body.userId).toEqual(singlePost.userId)
+        })
+    })
+})
