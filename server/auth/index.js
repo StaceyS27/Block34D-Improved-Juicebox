@@ -76,7 +76,9 @@ authRouter.post("/login", async(req, res, next) => {
 
         const token = jwt.sign({id: user.id}, process.env.JWT);
 
-        res.send("You have logged in! \n Token: " + token);
+        delete (user.password)
+
+        res.send({user, token});
 
     } catch (error) {
         res.send("unable to log in.")

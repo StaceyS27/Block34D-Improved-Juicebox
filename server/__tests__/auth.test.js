@@ -46,4 +46,36 @@ describe('Authentication', ()=> {
             expect(response.body.token).toEqual(token)
         })
     })
+
+    describe('/auth/login', () => {
+        it('logs in an existing user', async () => {
+            const userInput = {
+                username: 'testName2',
+                password: 'testPassword2'
+            };
+
+            const userFromDatabase = {
+                id: 3,
+                username: userInput.username,
+                password: 'hashedpassword'
+            }
+
+            const token = 'testToken'
+
+            prismaMock.users.findUnique.mockResolvedValue(userFromDatabase);
+            bcrypt.compare.mockReturnValue(true);
+            jwt.sign.mockReturnValue(token);
+
+            const response = await request(app)
+            .post('/auth/login')
+            .send(userInput)
+
+            console.log(response)
+
+            expect(response.body.user.username).toEqual(userFromDatabase.username)
+            expect(response.body.token).toEqual(token)
+            expect(response.body.user.password).toBeUndefined()
+
+        })
+    })
 })
