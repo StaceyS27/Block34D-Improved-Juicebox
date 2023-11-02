@@ -1,11 +1,13 @@
 const app = require('../app')
 const request = require('supertest');
+const jwt = require('jsonwebtoken');
 
 const prismaMock = require('../mocks/prismaMock');
+jest.mock('jsonwebtoken');
 
 describe('/api/posts', () => {
     describe('GET /api/posts', () => {
-        it.only('returns all posts', async () => {
+        it('returns all posts', async () => {
             const posts = [
                 {id: 1, title: "Test", content: "Test", userId: 1},
                 {id: 2, title: "Test", content: "Test", userId: 1}
@@ -20,28 +22,36 @@ describe('/api/posts', () => {
         })
     })
 
-    const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNjk4NzIxNTk4fQ.JIklN4WWVNjM05ZMd_edQV_wsOBSWsAH6CkKDmlpQE4'
-
     describe('POST /api/posts', () => {
         it('creates new post', async () => {
+            const user = {
+                id: 123,
+            }
+        
             const newPost = {
+                id: 5,
                 title: "Hanging Out",
                 content: "I enjoy the sun",
-                userId: 8     
+                userId: user.id     
             };
 
+            jwt.verify.mockReturnValue({id: user.id})
+            prismaMock.users.findUnique.mockResolvedValue(user)
             prismaMock.posts.create.mockResolvedValue(newPost);
 
             const response = await request(app)
             .post('/api/posts')
-            .set('Authorization' ,`Bearer ${accessToken}`)
+            .set('Authorization' ,'Bearer fakeToken')
             .send(newPost);
+
+            console.log(response.body)
+            console.log(response.status)
         
             expect(response.body.title).toEqual(newPost.title);
             expect(response.body.content).toEqual(newPost.content);
             expect(response.body.userId).toEqual(newPost.userId);
 
-           // expect(prismaMock.posts.create).toHaveBeenCalledTimes(1);
+            expect(prismaMock.posts.create).toHaveBeenCalledTimes(1);
         })
     })
 })

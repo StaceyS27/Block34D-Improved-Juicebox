@@ -27,9 +27,7 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
             }
         })
         
-        res.send(newPost
-           
-        )
+        res.send(newPost)
     } catch (error){
         res.status(401).json({error: error.message})
     }
