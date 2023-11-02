@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan')
+const cors = require('cors')
 
 app.use(morgan("dev"))
-
+app.use(cors());
 
 //test functionality of the app server
 app.get('/', async (req, res, next) => {
