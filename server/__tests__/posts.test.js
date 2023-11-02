@@ -76,22 +76,29 @@ describe('/api/posts/:postId', () => {
 
     describe('PUT /api/posts/:postId', () => {
         it('updates a single post', async() => {
+           const postToUpdate = {
+            id: 50,
+            title: "Hanging",
+            content: "sun!!",
+            userId: 60
+           }
+
             const updatedPost = {
                 id: 50,
                 title: "Hanging Out!!",
                 content: "I enjoy the sun!!",
                 userId: 60
             };
+
             jwt.verify.mockReturnValue({id: 60});
-            prismaMock.users.findUnique.mockResolvedValue({id: 60})
+            prismaMock.users.findUnique.mockResolvedValue({id: 60});
+            prismaMock.posts.findUnique.mockResolvedValue(postToUpdate)
             prismaMock.posts.update.mockResolvedValue(updatedPost);
 
             const response = await request(app)
             .put('/api/posts/19')
             .set('Authorization', 'Bearer fakeToken')
             .send(updatedPost);
-
-            console.log(response)
 
             expect(response.body.post.title).toEqual(updatedPost.title);
             expect(response.body.post.content).toEqual(updatedPost.content);
@@ -109,14 +116,14 @@ describe('/api/posts/:postId', () => {
                 userId: 8
             };
             
+            jwt.verify.mockReturnValue({id: 8});
+            prismaMock.users.findUnique.mockResolvedValue({id: 8});
+            prismaMock.posts.findUnique.mockResolvedValue(deletedPost);
             prismaMock.posts.delete.mockResolvedValue(deletedPost);
 
             const response = await request(app)
-            .delete(`/api/posts/${deletedPost.id}`)
-            .set('Authorization', `Bearer ${accessToken}`)
-
-            console.log("DEBUGGING....")
-            console.log(response)
+            .delete('/api/posts/26')
+            .set('Authorization', 'Bearer fakeToken')
 
             expect(response.body.Post.title).toEqual(deletedPost.title);
             expect(response.body.Post.content).toEqual(deletedPost.content);
