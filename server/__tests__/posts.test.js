@@ -5,10 +5,10 @@ const prismaMock = require('../mocks/prismaMock');
 
 describe('/api/posts', () => {
     describe('GET /api/posts', () => {
-        it('returns all posts', async () => {
+        it.only('returns all posts', async () => {
             const posts = [
-                {id: 1, title: "Happy Home", content: "I am happy when I am home with my family", userId: 1},
-                {id: 2, title: "I love Walking", content: "Walking is best when done with music", userId: 1}
+                {id: 1, title: "Test", content: "Test", userId: 1},
+                {id: 2, title: "Test", content: "Test", userId: 1}
             ];
 
             prismaMock.posts.findMany.mockResolvedValue(posts);
@@ -84,11 +84,36 @@ describe('/api/posts/:postId', () => {
             .set('Authorization', `Bearer ${accessToken}`)
             .send(updatedPost);
 
-            console.log(response)
 
             expect(response.body.post.title).toEqual(updatedPost.title);
             expect(response.body.post.content).toEqual(updatedPost.content);
             expect(response.body.post.userId).toEqual(updatedPost.userId)
+        })
+    })
+
+    describe('DELETE /api/posts/:postId', () => {
+        
+        it('deletes a single post', async() => {
+            const deletedPost = {
+                id: 26,
+                title: "Hanging Out",
+                content: "I enjoy the sun",
+                userId: 8
+            };
+            
+            prismaMock.posts.delete.mockResolvedValue(deletedPost);
+
+            const response = await request(app)
+            .delete(`/api/posts/${deletedPost.id}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+
+            console.log("DEBUGGING....")
+            console.log(response)
+
+            expect(response.body.Post.title).toEqual(deletedPost.title);
+            expect(response.body.Post.content).toEqual(deletedPost.content);
+            expect(response.body.Post.userId).toEqual(deletedPost.userId)
+
         })
     })
 })
