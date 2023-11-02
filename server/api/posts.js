@@ -9,7 +9,6 @@ const { requireUser } = require('./utils');
 postsRouter.get('/', async (req, res, next) => {
     try {
         const posts = await prisma.posts.findMany();
-        console.log(posts)
         res.send(posts)
     } catch (error) {
         res.send("unable to get posts")

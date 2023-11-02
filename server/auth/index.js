@@ -42,10 +42,11 @@ authRouter.post('/register', async (req, res, next) => {
             }
         });
 
-        const token = jwt.sign({ id: newUser.id }, process.env.JWT);
-        const responseMessage = "You have successfully registered! \n Token: " + token
+        delete newUser.password
 
-        res.send(responseMessage);
+        const token = jwt.sign({ id: newUser.id }, process.env.JWT);
+        
+        res.send({newUser, token});
     } catch (error) {
         res.send("unable to register")
     }
