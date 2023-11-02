@@ -68,7 +68,7 @@ describe('/api/posts/:postId', () => {
 
             prismaMock.posts.findUnique.mockResolvedValue(singlePost);
 
-            const response = await request(app).get(`/api/posts/${singlePost.id}`);
+            const response = await request(app).get('/api/posts/4');
 
             expect(response.body.id).toEqual(singlePost.id);
             expect(response.body.title).toEqual(singlePost.title);
