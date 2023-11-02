@@ -43,9 +43,6 @@ describe('/api/posts', () => {
             .post('/api/posts')
             .set('Authorization' ,'Bearer fakeToken')
             .send(newPost);
-
-            console.log(response.body)
-            console.log(response.status)
         
             expect(response.body.title).toEqual(newPost.title);
             expect(response.body.content).toEqual(newPost.content);
@@ -77,23 +74,24 @@ describe('/api/posts/:postId', () => {
         })
     });
 
-    const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNjk4ODYzMzIwfQ.Rxen6TvyWyl8BvKNQGVBYPSbeZx04px7m9BKXi5hzM8'
     describe('PUT /api/posts/:postId', () => {
         it('updates a single post', async() => {
             const updatedPost = {
-                id: 19,
+                id: 50,
                 title: "Hanging Out!!",
                 content: "I enjoy the sun!!",
-                userId: 8
+                userId: 60
             };
-
+            jwt.verify.mockReturnValue({id: 60});
+            prismaMock.users.findUnique.mockResolvedValue({id: 60})
             prismaMock.posts.update.mockResolvedValue(updatedPost);
 
             const response = await request(app)
-            .put(`/api/posts/${updatedPost.id}`)
-            .set('Authorization', `Bearer ${accessToken}`)
+            .put('/api/posts/19')
+            .set('Authorization', 'Bearer fakeToken')
             .send(updatedPost);
 
+            console.log(response)
 
             expect(response.body.post.title).toEqual(updatedPost.title);
             expect(response.body.post.content).toEqual(updatedPost.content);
